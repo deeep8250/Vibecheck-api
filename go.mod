@@ -5,7 +5,6 @@ go 1.25.8
 require (
 	github.com/golang-migrate/migrate/v4 v4.19.1
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/lib/pq v1.10.9
 )
 
 require (
@@ -43,6 +42,7 @@ require (
 require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/gin-gonic/gin v1.12.0
+	github.com/lib/pq v1.10.9
 	github.com/redis/go-redis/v9 v9.19.0
 	golang.org/x/sys v0.45.0 // indirect
 )
