@@ -1,0 +1,37 @@
+services:
+ app:
+  build: .
+  ports:
+   - "8000:8080"
+  env_file:
+   - .env
+  depends_on:
+   - db
+   - redis
+
+
+
+
+
+# Port binding exposes this service to your local machine (outside Docker)
+# This lets you connect via TablePlus, psql, or any DB client on your machine
+# In production: remove port binding - db is only reachable inside Docker network
+# In production: app connects using service name "db" not "localhost"
+# Example: postgres://vibecheck:secret@db:5432/vibecheck_db
+ db:
+  image: postgres:15-alpine
+  
+  environment:
+   POSTGRES_USER: ${DB_USER}
+   POSTGRES_PASSWORD: ${DB_PASSWORD}
+   POSTGRES_DB: ${DB_NAME}
+  volumes:
+    - postgres_data:/var/lib/postgresql/data 
+      
+
+ redis:
+  image: redis:7-alpine
+ 
+
+volumes:
+  postgres_data:      
