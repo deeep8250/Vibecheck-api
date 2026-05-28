@@ -7,7 +7,7 @@ import (
 // for handler test
 type AuthServiceInterface interface {
 	Register(Register) (*models.User, error)
-	Login(email string) (string, error)
+	Login(userInput Login) (string, error)
 }
 
 // for sevice test
