@@ -33,3 +33,11 @@ type Reaction struct {
 	ReactionGiverID int       `db:"reaction_giver_id"`
 	CreatedAt       time.Time `db:"created_at"`
 }
+
+type Notification struct {
+	ID            int       `db:"id"`
+	UserID        int       `db:"user_id"`
+	ReactedUserID int       `db:"reacted_user_id"`
+	ReactedPost   int       `db:"reacted_post_id"`
+	CreatedAt     time.Time `db:"created_at"`
+}
