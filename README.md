@@ -205,11 +205,3 @@ GitHub Actions runs on every push to `main`:
 Deployed to **Railway** (or Render) — live URL added here after first deployment.
 
 ---
-
-## Part of the Phase 2 Backend Roadmap
-
-| Project | Focus | Status |
-|---------|-------|--------|
-| ThreadPulse | Learn all Phase 2 concepts | ✅ Complete |
-| **VibeCheck** | **Solidify + learn missing production concepts** | 🔨 In Progress |
-| Nexus | Resume showstopper — own everything | ⏳ Upcoming |
