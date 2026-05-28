@@ -42,6 +42,7 @@ require (
 require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/gin-gonic/gin v1.12.0
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/lib/pq v1.10.9
 	github.com/redis/go-redis/v9 v9.19.0
 	golang.org/x/sys v0.45.0 // indirect
