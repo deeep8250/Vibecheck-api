@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/deeep8250/vibecheck-api/internal/config"
+	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jmoiron/sqlx"
@@ -31,16 +32,16 @@ func DBinit() {
 	}
 
 	//finding the migrate
-	// m, err := migrate.New("file://db/migrations", dsn)
-	// if err != nil {
-	// 	log.Fatal("migration failed", err.Error())
-	// }
+	m, err := migrate.New("file://db/migrations", dsn)
+	if err != nil {
+		log.Fatal("migration failed", err.Error())
+	}
 
-	// //execute the founded migration
-	// if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-	// 	log.Fatal("migration failed ", err.Error())
-	// }
+	//execute the founded migration
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal("migration failed ", err.Error())
+	}
 
-	// log.Println("migration successful")
+	log.Println("migration successful")
 	log.Println("database connection established")
 }

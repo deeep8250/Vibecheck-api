@@ -12,7 +12,7 @@ FROM alpine:latest
 
 WORKDIR /app
 COPY --from=builder /app/vibecheck .
-# COPY --from=builder /app/db/migrations ./db/migrations
+COPY --from=builder /app/db/migrations ./db/migrations
 
 
 EXPOSE 8080
