@@ -32,16 +32,16 @@ func DBinit() {
 	}
 
 	//finding the migrate
-	m, err := migrate.New("file://db/migrations", dsn)
-	if err != nil {
-		log.Fatal("migration failed", err.Error())
-	}
+	// m, err := migrate.New("file://db/migrations", dsn)
+	// if err != nil {
+	// 	log.Fatal("migration failed", err.Error())
+	// }
 
-	//execute the founded migration
-	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-		log.Fatal("migration failed ", err.Error())
-	}
+	// //execute the founded migration
+	// if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+	// 	log.Fatal("migration failed ", err.Error())
+	// }
 
-	log.Println("migration successful")
+	// log.Println("migration successful")
 	log.Println("database connection established")
 }
