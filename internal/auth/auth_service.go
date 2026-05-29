@@ -1,6 +1,9 @@
 package auth
 
 import (
+	"database/sql"
+	"errors"
+
 	"github.com/deeep8250/vibecheck-api/internal/models"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -17,6 +20,14 @@ func NewAuthService(Repo AuthRepoInterface) *AuthService {
 
 func (s *AuthService) Register(userInput Register) (*models.User, error) {
 
+	user, err := s.repo.GetUserByEmail(userInput.Email)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	if user != nil {
+		return nil, errors.New("user already exists")
+	}
+
 	hashPass, err := bcrypt.GenerateFromPassword([]byte(userInput.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
@@ -24,7 +35,7 @@ func (s *AuthService) Register(userInput Register) (*models.User, error) {
 
 	userInput.Password = string(hashPass)
 
-	user, err := s.repo.CreateUser(userInput.Username, userInput.Email, userInput.Password)
+	user, err = s.repo.CreateUser(userInput.Username, userInput.Email, userInput.Password)
 	if err != nil {
 		return nil, err
 	}
