@@ -7,8 +7,6 @@ import (
 
 	"github.com/deeep8250/vibecheck-api/internal/config"
 
-	"github.com/golang-migrate/migrate/v4"
-
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jmoiron/sqlx"
