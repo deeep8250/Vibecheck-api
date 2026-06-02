@@ -18,11 +18,11 @@ func NewPostRepository() *PostRepository {
 	}
 }
 
-func (r *PostRepository) CreatePostRepo(userID int, userInput CreatePost) (*models.Post, error) {
+func (r *PostRepository) CreatePost(userID int, userInput CreatePost) (*models.Post, error) {
 
 	var Post models.Post
 	query := `insert into posts(user_id,content,mood_tag,emoji)  values($1,$2,$3,$4) returning *`
-	result := r.Db.QueryRowx(query, userInput.Content, userInput.MoodTag, userInput.Emoji, userID)
+	result := r.Db.QueryRowx(query, userID, userInput.Content, userInput.MoodTag, userInput.Emoji)
 
 	err := result.StructScan(&Post)
 	if err != nil {
@@ -30,7 +30,7 @@ func (r *PostRepository) CreatePostRepo(userID int, userInput CreatePost) (*mode
 	}
 	return &Post, nil
 }
-func (r *PostRepository) GetPostRepo(postID int) (*models.Post, error) {
+func (r *PostRepository) GetPost(postID int) (*models.Post, error) {
 	var Post models.Post
 
 	query := `select * from posts where id=$1`
@@ -41,7 +41,7 @@ func (r *PostRepository) GetPostRepo(postID int) (*models.Post, error) {
 	return &Post, nil
 
 }
-func (r *PostRepository) UpdatePostRepo(userID, postID int, userInput UpdatePost) (*models.Post, error) {
+func (r *PostRepository) UpdatePost(userID, postID int, userInput UpdatePost) (*models.Post, error) {
 	query := `update posts 
 	           set
 			      	content = coalesce(nullif($1,''),content),
@@ -58,7 +58,7 @@ func (r *PostRepository) UpdatePostRepo(userID, postID int, userInput UpdatePost
 	return &UpdatedPost, nil
 
 }
-func (r *PostRepository) DeletePostRepo(userID, postiD int) error {
+func (r *PostRepository) DeletePost(userID, postiD int) error {
 
 	query := `delete from posts where id=$1 and user_id=$2`
 	result, err := r.Db.Exec(query, postiD, userID)
