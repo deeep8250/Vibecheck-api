@@ -19,7 +19,7 @@ func NewPostHandler(s PostServiceInterface) *PostHandler {
 
 func (s *PostHandler) CreatePostHandler(c *gin.Context) {
 
-	userID, ok := c.Get("user_id")
+	userID, ok := c.Get("userID")
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "unauthorized user",
@@ -89,7 +89,7 @@ func (s *PostHandler) UpdatePostHandler(c *gin.Context) {
 		return
 	}
 
-	userID, ok := c.Get("user_id")
+	userID, ok := c.Get("userID")
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "unauthorized user",
@@ -136,7 +136,7 @@ func (s *PostHandler) DeletePostHandler(c *gin.Context) {
 		return
 	}
 
-	userID, ok := c.Get("user_id")
+	userID, ok := c.Get("userID")
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "unauthorized user",
