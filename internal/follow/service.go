@@ -1,6 +1,10 @@
 package follow
 
-import "github.com/deeep8250/vibecheck-api/internal/models"
+import (
+	"errors"
+
+	"github.com/deeep8250/vibecheck-api/internal/models"
+)
 
 type FollowService struct {
 	repo FollowRepositoryInterface
@@ -13,6 +17,9 @@ func NewFollowService(re FollowRepositoryInterface) *FollowService {
 }
 
 func (s *FollowService) FollowService(userID, FollowedProfileID int) error {
+	if userID == FollowedProfileID {
+		return errors.New("cant follow yourself dumbass")
+	}
 	err := s.repo.FollowRepo(userID, FollowedProfileID)
 	if err != nil {
 		return err

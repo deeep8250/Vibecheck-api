@@ -20,7 +20,7 @@ func NewFollowRepository() *FollowRepository {
 
 func (r *FollowRepository) FollowRepo(userID, FollowedProfileID int) error {
 
-	query := `insert into follow(follower_id,followed_user_id) values($1,$2)`
+	query := `insert into follows(follower_id,followed_user_id) values($1,$2)`
 	result, err := r.Db.Exec(query, userID, FollowedProfileID)
 	if err != nil {
 		return err
@@ -37,9 +37,10 @@ func (r *FollowRepository) FollowRepo(userID, FollowedProfileID int) error {
 	return nil
 
 }
+
 func (r *FollowRepository) UnFollowRepo(userID, FollowedProfileID int) error {
 
-	query := `delete from follow where follower_id=$1 and followed_user_id=$2`
+	query := `delete from follows where follower_id=$1 and followed_user_id=$2`
 	result, err := r.Db.Exec(query, userID, FollowedProfileID)
 	if err != nil {
 		return err
@@ -58,7 +59,7 @@ func (r *FollowRepository) UnFollowRepo(userID, FollowedProfileID int) error {
 }
 func (r *FollowRepository) GetFollowRepo(userID int) ([]models.Follow, error) {
 	var followedProfiles []models.Follow
-	query := `select * from follow where follower_id=$1`
+	query := `select * from follows where follower_id=$1`
 	err := r.Db.Select(&followedProfiles, query, userID)
 	if err != nil {
 		return nil, err
