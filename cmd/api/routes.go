@@ -29,6 +29,7 @@ func Routes() {
 
 	v1.POST("/post", middleware.Middleware(), PostHandler.CreatePostHandler)
 	v1.GET("/post/:id", middleware.Middleware(), PostHandler.GetPostHandler)
+	v1.GET("/posts", middleware.Middleware(), PostHandler.GetAllPostHandler)
 	v1.PATCH("/post/:id", middleware.Middleware(), PostHandler.UpdatePostHandler)
 	v1.DELETE("/post/:id", middleware.Middleware(), PostHandler.DeletePostHandler)
 

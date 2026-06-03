@@ -29,6 +29,14 @@ func (r *PostService) GetPostService(postID int) (*models.Post, error) {
 	return user, nil
 }
 
+func (r *PostService) GetAllPostService(userID int) ([]models.Post, error) {
+	userPosts, err := r.repo.GetAllPost(userID)
+	if err != nil {
+		return nil, err
+	}
+	return userPosts, nil
+}
+
 func (r *PostService) UpdatePostService(userID, postID int, userInput UpdatePost) (*models.Post, error) {
 	user, err := r.repo.UpdatePost(userID, postID, userInput)
 	if err != nil {

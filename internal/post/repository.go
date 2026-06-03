@@ -41,6 +41,19 @@ func (r *PostRepository) GetPost(postID int) (*models.Post, error) {
 	return &Post, nil
 
 }
+
+func (r *PostRepository) GetAllPost(userID int) ([]models.Post, error) {
+	var Posts []models.Post
+
+	query := `select * from posts where user_id=$1`
+	err := r.Db.Select(&Posts, query, userID)
+	if err != nil {
+		return nil, err
+	}
+	return Posts, nil
+
+}
+
 func (r *PostRepository) UpdatePost(userID, postID int, userInput UpdatePost) (*models.Post, error) {
 	query := `update posts 
 	           set

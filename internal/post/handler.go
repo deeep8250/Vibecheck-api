@@ -79,6 +79,37 @@ func (s *PostHandler) GetPostHandler(c *gin.Context) {
 
 }
 
+func (s *PostHandler) GetAllPostHandler(c *gin.Context) {
+
+	userID, ok := c.Get("userID")
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized user",
+		})
+		return
+	}
+
+	userIDInt, ok := userID.(int)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "invalid user id",
+		})
+		return
+	}
+
+	userPosts, err := s.service.GetAllPostService(userIDInt)
+	if err != nil {
+		c.Error(err)
+		c.Abort()
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"posts": userPosts,
+	})
+
+}
+
 func (s *PostHandler) UpdatePostHandler(c *gin.Context) {
 	postID := c.Param("id")
 	postIDint, err := strconv.Atoi(postID)
