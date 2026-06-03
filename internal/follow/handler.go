@@ -37,7 +37,7 @@ func (h *FollowHandler) FollowHandler(c *gin.Context) {
 	err = h.service.FollowService(userID.(int), followedUserIDint)
 	if err != nil {
 		c.Error(err)
-		c.Abort()
+
 		return
 	}
 
@@ -69,7 +69,7 @@ func (h *FollowHandler) UnfollowHandler(c *gin.Context) {
 	err = h.service.UnFollowService(userID.(int), followedUserIDint)
 	if err != nil {
 		c.Error(err)
-		c.Abort()
+
 		return
 	}
 
@@ -91,7 +91,7 @@ func (h *FollowHandler) GetFollowHandler(c *gin.Context) {
 	following, err := h.service.GetFollowService(userID.(int))
 	if err != nil {
 		c.Error(err)
-		c.Abort()
+
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{

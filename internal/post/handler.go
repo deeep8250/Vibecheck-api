@@ -47,7 +47,6 @@ func (s *PostHandler) CreatePostHandler(c *gin.Context) {
 	proofReturn, err := s.service.CreatePostService(userIDInt, userRequest)
 	if err != nil {
 		c.Error(err)
-		c.Abort()
 		return
 	}
 
@@ -69,7 +68,6 @@ func (s *PostHandler) GetPostHandler(c *gin.Context) {
 	userPost, err := s.service.GetPostService(postIDint)
 	if err != nil {
 		c.Error(err)
-		c.Abort()
 		return
 	}
 
@@ -100,7 +98,6 @@ func (s *PostHandler) GetAllPostHandler(c *gin.Context) {
 	userPosts, err := s.service.GetAllPostService(userIDInt)
 	if err != nil {
 		c.Error(err)
-		c.Abort()
 		return
 	}
 
@@ -147,7 +144,6 @@ func (s *PostHandler) UpdatePostHandler(c *gin.Context) {
 	updatedPost, err := s.service.UpdatePostService(userIDInt, postIDint, UPost)
 	if err != nil {
 		c.Error(err)
-		c.Abort()
 		return
 	}
 
@@ -185,7 +181,6 @@ func (s *PostHandler) DeletePostHandler(c *gin.Context) {
 	err = s.service.DeletePostService(userIdInt, postIDint)
 	if err != nil {
 		c.Error(err)
-		c.Abort()
 		return
 	}
 

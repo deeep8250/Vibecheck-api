@@ -17,7 +17,7 @@ func Middleware() gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "unauthorized user",
 			})
-			c.Abort()
+
 			return
 		}
 
@@ -26,7 +26,7 @@ func Middleware() gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "unauthorized user",
 			})
-			c.Abort()
+
 			return
 		}
 
@@ -67,7 +67,7 @@ func Middleware() gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "unauthorized user",
 			})
-			c.Abort()
+
 			return
 		}
 
@@ -76,7 +76,7 @@ func Middleware() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": "invalid claims in token",
 			})
-			c.Abort()
+
 			return
 		}
 

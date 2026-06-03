@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/deeep8250/vibecheck-api/internal/auth"
+	"github.com/deeep8250/vibecheck-api/internal/feed"
 	"github.com/deeep8250/vibecheck-api/internal/follow"
 	"github.com/deeep8250/vibecheck-api/internal/middleware"
 	"github.com/deeep8250/vibecheck-api/internal/post"
@@ -33,6 +34,7 @@ func Routes() {
 	v1.PATCH("/post/:id", middleware.Middleware(), PostHandler.UpdatePostHandler)
 	v1.DELETE("/post/:id", middleware.Middleware(), PostHandler.DeletePostHandler)
 
+	//follow
 	followRepo := follow.NewFollowRepository()
 	followService := follow.NewFollowService(followRepo)
 	followHandler := follow.NewFollowHand(followService)
@@ -40,6 +42,13 @@ func Routes() {
 	v1.POST("/follow/:id", middleware.Middleware(), followHandler.FollowHandler)
 	v1.DELETE("/unfollow/:id", middleware.Middleware(), followHandler.UnfollowHandler)
 	v1.GET("/follow", middleware.Middleware(), followHandler.GetFollowHandler)
+
+	//feed
+	feedRepo := feed.NewFeedRepo()
+	feedService := feed.NewFeedService(feedRepo)
+	feedHandler := feed.NewFeedHandler(feedService)
+
+	v1.GET("/feed", middleware.Middleware(), feedHandler.GetFeed)
 
 	r.Run(":8080")
 

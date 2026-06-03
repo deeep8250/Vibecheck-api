@@ -28,9 +28,8 @@ func (h *AuthHandler) RegisterUser(c *gin.Context) {
 
 	User, err := h.service.Register(userInput)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
+		c.Error(err)
+
 		return
 	}
 
@@ -51,9 +50,8 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	token, err := h.service.Login(userInput)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
+		c.Error(err)
+
 		return
 	}
 
