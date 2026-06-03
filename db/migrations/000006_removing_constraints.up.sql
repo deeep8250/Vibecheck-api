@@ -1,0 +1,1 @@
+alter table posts drop constraint if exists posts_user_id_post_date_key;

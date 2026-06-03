@@ -1,0 +1,1 @@
+alter table  posts add constraint posts_user_id_post_date_key unique(user_id,post_date);
