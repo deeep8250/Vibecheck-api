@@ -17,6 +17,7 @@ func Middleware() gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "unauthorized user",
 			})
+			c.Abort()
 
 			return
 		}
@@ -26,6 +27,7 @@ func Middleware() gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "unauthorized user",
 			})
+			c.Abort()
 
 			return
 		}
@@ -67,6 +69,7 @@ func Middleware() gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "unauthorized user",
 			})
+			c.Abort()
 
 			return
 		}
@@ -77,7 +80,10 @@ func Middleware() gin.HandlerFunc {
 				"error": "invalid claims in token",
 			})
 
+			c.Abort()
+
 			return
+
 		}
 
 		userID := int(claims["user_id"].(float64))
