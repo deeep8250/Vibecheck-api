@@ -1,8 +1,10 @@
 package post
 
 import (
+	"context"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +20,8 @@ func NewPostHandler(s PostServiceInterface) *PostHandler {
 }
 
 func (s *PostHandler) CreatePostHandler(c *gin.Context) {
-
+	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second*5)
+	defer cancel()
 	userID, ok := c.Get("userID")
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -44,7 +47,7 @@ func (s *PostHandler) CreatePostHandler(c *gin.Context) {
 		return
 	}
 
-	proofReturn, err := s.service.CreatePostService(userIDInt, userRequest)
+	proofReturn, err := s.service.CreatePostService(ctx, userIDInt, userRequest)
 	if err != nil {
 		c.Error(err)
 		return
@@ -56,6 +59,8 @@ func (s *PostHandler) CreatePostHandler(c *gin.Context) {
 }
 
 func (s *PostHandler) GetPostHandler(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second*5)
+	defer cancel()
 	postID := c.Param("id")
 	postIDint, err := strconv.Atoi(postID)
 	if err != nil {
@@ -65,7 +70,7 @@ func (s *PostHandler) GetPostHandler(c *gin.Context) {
 		return
 	}
 
-	userPost, err := s.service.GetPostService(postIDint)
+	userPost, err := s.service.GetPostService(ctx, postIDint)
 	if err != nil {
 		c.Error(err)
 		return
@@ -78,7 +83,8 @@ func (s *PostHandler) GetPostHandler(c *gin.Context) {
 }
 
 func (s *PostHandler) GetAllPostHandler(c *gin.Context) {
-
+	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second*5)
+	defer cancel()
 	userID, ok := c.Get("userID")
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -95,7 +101,7 @@ func (s *PostHandler) GetAllPostHandler(c *gin.Context) {
 		return
 	}
 
-	userPosts, err := s.service.GetAllPostService(userIDInt)
+	userPosts, err := s.service.GetAllPostService(ctx, userIDInt)
 	if err != nil {
 		c.Error(err)
 		return
@@ -108,6 +114,8 @@ func (s *PostHandler) GetAllPostHandler(c *gin.Context) {
 }
 
 func (s *PostHandler) UpdatePostHandler(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second*5)
+	defer cancel()
 	postID := c.Param("id")
 	postIDint, err := strconv.Atoi(postID)
 	if err != nil {
@@ -141,7 +149,7 @@ func (s *PostHandler) UpdatePostHandler(c *gin.Context) {
 		return
 	}
 
-	updatedPost, err := s.service.UpdatePostService(userIDInt, postIDint, UPost)
+	updatedPost, err := s.service.UpdatePostService(ctx, userIDInt, postIDint, UPost)
 	if err != nil {
 		c.Error(err)
 		return
@@ -154,6 +162,8 @@ func (s *PostHandler) UpdatePostHandler(c *gin.Context) {
 }
 
 func (s *PostHandler) DeletePostHandler(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second*5)
+	defer cancel()
 	postID := c.Param("id")
 	postIDint, err := strconv.Atoi(postID)
 	if err != nil {
@@ -178,7 +188,7 @@ func (s *PostHandler) DeletePostHandler(c *gin.Context) {
 		return
 	}
 
-	err = s.service.DeletePostService(userIdInt, postIDint)
+	err = s.service.DeletePostService(ctx, userIdInt, postIDint)
 	if err != nil {
 		c.Error(err)
 		return

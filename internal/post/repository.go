@@ -1,6 +1,7 @@
 package post
 
 import (
+	"context"
 	"errors"
 
 	"github.com/deeep8250/vibecheck-api/internal/config"
@@ -18,11 +19,11 @@ func NewPostRepository() *PostRepository {
 	}
 }
 
-func (r *PostRepository) CreatePost(userID int, userInput CreatePost) (*models.Post, error) {
+func (r *PostRepository) CreatePost(ctx context.Context, userID int, userInput CreatePost) (*models.Post, error) {
 
 	var Post models.Post
 	query := `insert into posts(user_id,content,mood_tag,emoji)  values($1,$2,$3,$4) returning *`
-	result := r.Db.QueryRowx(query, userID, userInput.Content, userInput.MoodTag, userInput.Emoji)
+	result := r.Db.QueryRowxContext(ctx, query, userID, userInput.Content, userInput.MoodTag, userInput.Emoji)
 
 	err := result.StructScan(&Post)
 	if err != nil {
@@ -30,11 +31,11 @@ func (r *PostRepository) CreatePost(userID int, userInput CreatePost) (*models.P
 	}
 	return &Post, nil
 }
-func (r *PostRepository) GetPost(postID int) (*models.Post, error) {
+func (r *PostRepository) GetPost(ctx context.Context, postID int) (*models.Post, error) {
 	var Post models.Post
 
 	query := `select * from posts where id=$1`
-	err := r.Db.Get(&Post, query, postID)
+	err := r.Db.GetContext(ctx, &Post, query, postID)
 	if err != nil {
 		return nil, err
 	}
@@ -42,11 +43,11 @@ func (r *PostRepository) GetPost(postID int) (*models.Post, error) {
 
 }
 
-func (r *PostRepository) GetAllPost(userID int) ([]models.Post, error) {
+func (r *PostRepository) GetAllPost(ctx context.Context, userID int) ([]models.Post, error) {
 	var Posts []models.Post
 
 	query := `select * from posts where user_id=$1`
-	err := r.Db.Select(&Posts, query, userID)
+	err := r.Db.SelectContext(ctx, &Posts, query, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +55,7 @@ func (r *PostRepository) GetAllPost(userID int) ([]models.Post, error) {
 
 }
 
-func (r *PostRepository) UpdatePost(userID, postID int, userInput UpdatePost) (*models.Post, error) {
+func (r *PostRepository) UpdatePost(ctx context.Context, userID, postID int, userInput UpdatePost) (*models.Post, error) {
 	query := `update posts 
 	           set
 			      	content = coalesce(nullif($1,''),content),
@@ -63,7 +64,7 @@ func (r *PostRepository) UpdatePost(userID, postID int, userInput UpdatePost) (*
              where id=$4 and user_id=$5 returning *`
 
 	var UpdatedPost models.Post
-	result := r.Db.QueryRowx(query, userInput.Content, userInput.MoodTag, userInput.Emoji, postID, userID)
+	result := r.Db.QueryRowxContext(ctx, query, userInput.Content, userInput.MoodTag, userInput.Emoji, postID, userID)
 	err := result.StructScan(&UpdatedPost)
 	if err != nil {
 		return nil, err
@@ -71,10 +72,10 @@ func (r *PostRepository) UpdatePost(userID, postID int, userInput UpdatePost) (*
 	return &UpdatedPost, nil
 
 }
-func (r *PostRepository) DeletePost(userID, postiD int) error {
+func (r *PostRepository) DeletePost(ctx context.Context, userID, postiD int) error {
 
 	query := `delete from posts where id=$1 and user_id=$2`
-	result, err := r.Db.Exec(query, postiD, userID)
+	result, err := r.Db.ExecContext(ctx, query, postiD, userID)
 	if err != nil {
 		return err
 	}
