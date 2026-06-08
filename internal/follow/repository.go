@@ -1,6 +1,7 @@
 package follow
 
 import (
+	"context"
 	"errors"
 
 	"github.com/deeep8250/vibecheck-api/internal/config"
@@ -18,10 +19,10 @@ func NewFollowRepository() *FollowRepository {
 	}
 }
 
-func (r *FollowRepository) FollowRepo(userID, FollowedProfileID int) error {
+func (r *FollowRepository) FollowRepo(ctx context.Context, userID, FollowedProfileID int) error {
 
 	query := `insert into follows(follower_id,followed_user_id) values($1,$2)`
-	result, err := r.Db.Exec(query, userID, FollowedProfileID)
+	result, err := r.Db.ExecContext(ctx, query, userID, FollowedProfileID)
 	if err != nil {
 		return err
 	}
@@ -38,10 +39,10 @@ func (r *FollowRepository) FollowRepo(userID, FollowedProfileID int) error {
 
 }
 
-func (r *FollowRepository) UnFollowRepo(userID, FollowedProfileID int) error {
+func (r *FollowRepository) UnFollowRepo(ctx context.Context, userID, FollowedProfileID int) error {
 
 	query := `delete from follows where follower_id=$1 and followed_user_id=$2`
-	result, err := r.Db.Exec(query, userID, FollowedProfileID)
+	result, err := r.Db.ExecContext(ctx, query, userID, FollowedProfileID)
 	if err != nil {
 		return err
 	}
@@ -57,10 +58,10 @@ func (r *FollowRepository) UnFollowRepo(userID, FollowedProfileID int) error {
 	return nil
 
 }
-func (r *FollowRepository) GetFollowRepo(userID int) ([]models.Follow, error) {
+func (r *FollowRepository) GetFollowRepo(ctx context.Context, userID int) ([]models.Follow, error) {
 	var followedProfiles []models.Follow
 	query := `select * from follows where follower_id=$1`
-	err := r.Db.Select(&followedProfiles, query, userID)
+	err := r.Db.SelectContext(ctx, &followedProfiles, query, userID)
 	if err != nil {
 		return nil, err
 	}

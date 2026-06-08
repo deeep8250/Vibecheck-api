@@ -1,8 +1,10 @@
 package follow
 
 import (
+	"context"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,6 +19,8 @@ func NewFollowHand(serv FollowServiceInterface) *FollowHandler {
 
 func (h *FollowHandler) FollowHandler(c *gin.Context) {
 
+	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second*5)
+	defer cancel()
 	userID, ok := c.Get("userID")
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -34,7 +38,7 @@ func (h *FollowHandler) FollowHandler(c *gin.Context) {
 		return
 	}
 
-	err = h.service.FollowService(userID.(int), followedUserIDint)
+	err = h.service.FollowService(ctx, userID.(int), followedUserIDint)
 	if err != nil {
 		c.Error(err)
 
@@ -48,7 +52,8 @@ func (h *FollowHandler) FollowHandler(c *gin.Context) {
 }
 
 func (h *FollowHandler) UnfollowHandler(c *gin.Context) {
-
+	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second*5)
+	defer cancel()
 	userID, ok := c.Get("userID")
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -66,7 +71,7 @@ func (h *FollowHandler) UnfollowHandler(c *gin.Context) {
 		return
 	}
 
-	err = h.service.UnFollowService(userID.(int), followedUserIDint)
+	err = h.service.UnFollowService(ctx, userID.(int), followedUserIDint)
 	if err != nil {
 		c.Error(err)
 
@@ -79,7 +84,8 @@ func (h *FollowHandler) UnfollowHandler(c *gin.Context) {
 }
 
 func (h *FollowHandler) GetFollowHandler(c *gin.Context) {
-
+	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second*5)
+	defer cancel()
 	userID, ok := c.Get("userID")
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -88,7 +94,7 @@ func (h *FollowHandler) GetFollowHandler(c *gin.Context) {
 		return
 	}
 
-	following, err := h.service.GetFollowService(userID.(int))
+	following, err := h.service.GetFollowService(ctx, userID.(int))
 	if err != nil {
 		c.Error(err)
 

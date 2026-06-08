@@ -1,15 +1,19 @@
 package follow
 
-import "github.com/deeep8250/vibecheck-api/internal/models"
+import (
+	"context"
+
+	"github.com/deeep8250/vibecheck-api/internal/models"
+)
 
 type FollowRepositoryInterface interface {
-	FollowRepo(userID, FollowedProfileID int) error
-	UnFollowRepo(userID, FollowedProfileID int) error
-	GetFollowRepo(userID int) ([]models.Follow, error)
+	FollowRepo(c context.Context, userID, FollowedProfileID int) error
+	UnFollowRepo(c context.Context, userID, FollowedProfileID int) error
+	GetFollowRepo(c context.Context, userID int) ([]models.Follow, error)
 }
 
 type FollowServiceInterface interface {
-	FollowService(userID, FollowedProfileID int) error
-	UnFollowService(userID, FollowedProfileID int) error
-	GetFollowService(userID int) ([]models.Follow, error)
+	FollowService(c context.Context, userID, FollowedProfileID int) error
+	UnFollowService(c context.Context, userID, FollowedProfileID int) error
+	GetFollowService(c context.Context, userID int) ([]models.Follow, error)
 }
