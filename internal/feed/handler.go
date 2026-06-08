@@ -1,8 +1,10 @@
 package feed
 
 import (
+	"context"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +20,8 @@ func NewFeedHandler(s FeedServiceInterface) *FeedHandler {
 }
 
 func (h *FeedHandler) GetFeed(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second*5)
+	defer cancel()
 
 	userID, ok := c.Get("userID")
 	if !ok {
@@ -65,7 +69,7 @@ func (h *FeedHandler) GetFeed(c *gin.Context) {
 		return
 	}
 
-	feed, err := h.service.GetFeed(userIDInt, limitInt, pageInt)
+	feed, err := h.service.GetFeed(ctx, userIDInt, limitInt, pageInt)
 	if err != nil {
 		c.Error(err)
 

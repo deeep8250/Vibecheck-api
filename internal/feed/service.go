@@ -1,6 +1,10 @@
 package feed
 
-import "github.com/deeep8250/vibecheck-api/internal/models"
+import (
+	"context"
+
+	"github.com/deeep8250/vibecheck-api/internal/models"
+)
 
 type FeedService struct {
 	repo FeedRepoInterface
@@ -12,9 +16,10 @@ func NewFeedService(r FeedRepoInterface) *FeedService {
 	}
 }
 
-func (s *FeedService) GetFeed(userID, limit, page int) ([]models.Post, error) {
+func (s *FeedService) GetFeed(c context.Context, userID, limit, page int) ([]models.Post, error) {
+
 	offset := (page - 1) * limit
-	feed, err := s.repo.GetFeed(userID, limit, offset)
+	feed, err := s.repo.GetFeed(c, userID, limit, offset)
 	if err != nil {
 		return nil, err
 	}

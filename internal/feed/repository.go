@@ -4,6 +4,7 @@ import (
 	"github.com/deeep8250/vibecheck-api/internal/config"
 	"github.com/deeep8250/vibecheck-api/internal/models"
 	"github.com/jmoiron/sqlx"
+	"golang.org/x/net/context"
 )
 
 type FeedRepo struct {
@@ -16,13 +17,13 @@ func NewFeedRepo() *FeedRepo {
 	}
 }
 
-func (r *FeedRepo) GetFeed(userID, limit, offset int) ([]models.Post, error) {
+func (r *FeedRepo) GetFeed(c context.Context, userID, limit, offset int) ([]models.Post, error) {
 	var Feed []models.Post
 
 	query := `select p.* from posts as p
 	join follows as f on f.followed_user_id=p.user_id  where f.follower_id=$1 order by p.created_at desc limit $2 offset $3`
 
-	err := r.db.Select(&Feed, query, userID, limit, offset)
+	err := r.db.SelectContext(c, &Feed, query, userID, limit, offset)
 	if err != nil {
 		return nil, err
 	}
