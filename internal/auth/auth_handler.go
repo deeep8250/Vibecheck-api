@@ -1,7 +1,9 @@
 package auth
 
 import (
+	"context"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,7 +28,9 @@ func (h *AuthHandler) RegisterUser(c *gin.Context) {
 		return
 	}
 
-	User, err := h.service.Register(userInput)
+	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second*5)
+	defer cancel()
+	User, err := h.service.Register(ctx, userInput)
 	if err != nil {
 		c.Error(err)
 
@@ -47,8 +51,9 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		})
 		return
 	}
-
-	token, err := h.service.Login(userInput)
+	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second*5)
+	defer cancel()
+	token, err := h.service.Login(ctx, userInput)
 	if err != nil {
 		c.Error(err)
 

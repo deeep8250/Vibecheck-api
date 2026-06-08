@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -18,9 +19,9 @@ func NewAuthService(Repo AuthRepoInterface) *AuthService {
 	}
 }
 
-func (s *AuthService) Register(userInput Register) (*models.User, error) {
+func (s *AuthService) Register(c context.Context, userInput Register) (*models.User, error) {
 
-	user, err := s.repo.GetUserByEmail(userInput.Email)
+	user, err := s.repo.GetUserByEmail(c, userInput.Email)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
@@ -35,7 +36,7 @@ func (s *AuthService) Register(userInput Register) (*models.User, error) {
 
 	userInput.Password = string(hashPass)
 
-	user, err = s.repo.CreateUser(userInput.Username, userInput.Email, userInput.Password)
+	user, err = s.repo.CreateUser(c, userInput.Username, userInput.Email, userInput.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -43,8 +44,8 @@ func (s *AuthService) Register(userInput Register) (*models.User, error) {
 	return user, nil
 }
 
-func (s *AuthService) Login(userInput Login) (string, error) {
-	user, err := s.repo.GetUserByEmail(userInput.Email)
+func (s *AuthService) Login(c context.Context, userInput Login) (string, error) {
+	user, err := s.repo.GetUserByEmail(c, userInput.Email)
 	if err != nil {
 		return "", err
 	}
