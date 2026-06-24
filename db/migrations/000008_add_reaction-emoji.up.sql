@@ -1,0 +1,1 @@
+alter table reaction add column reaction_emoji varchar default '👍';

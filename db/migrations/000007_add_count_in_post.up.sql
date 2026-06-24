@@ -1,0 +1,1 @@
+alter  table post add column reaction_count int default 0; 

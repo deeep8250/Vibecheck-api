@@ -1,0 +1,1 @@
+alter table post drop column if exists reaction_count; 
