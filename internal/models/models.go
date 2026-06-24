@@ -16,6 +16,7 @@ type Post struct {
 	Content   string    `db:"content"`
 	MoodTag   string    `db:"mood_tag"`
 	Emoji     string    `db:"emoji"`
+	Reactions int       `db:"react_count"`
 	PostDate  time.Time `db:"post_date"`
 	CreatedAt time.Time `db:"created_at"`
 }
@@ -30,6 +31,7 @@ type Follow struct {
 type Reaction struct {
 	ID              int       `db:"id"`
 	PostID          int       `db:"post_id"`
+	ReactionEmoji   string    `db:"reaction_emoji"`
 	ReactionGiverID int       `db:"reaction_giver_id"`
 	CreatedAt       time.Time `db:"created_at"`
 }
@@ -40,4 +42,14 @@ type Notification struct {
 	ReactedUserID int       `db:"reacted_user_id"`
 	ReactedPost   int       `db:"reacted_post_id"`
 	CreatedAt     time.Time `db:"created_at"`
+}
+
+type ReactionDetail struct {
+	UserName      string    `db:"name"`
+	Content       string    `db:"content"`
+	MoodTag       string    `db:"mood_tag"`
+	Emoji         string    `db:"emoji"`
+	PostDate      time.Time `db:"post_date"`
+	CreatedAt     time.Time `db:"created_at"`
+	ReactionEmoji string    `db:"reaction_emoji"`
 }
