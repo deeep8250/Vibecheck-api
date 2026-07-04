@@ -48,7 +48,7 @@ func (h *ReactHandler) ReactPost(c *gin.Context) {
 	}
 
 	type EmojiInput struct {
-		emoji string `json:"emoji"`
+		Emoji string `json:"emoji"`
 	}
 	var inp EmojiInput
 	err = c.ShouldBindJSON(&inp)
@@ -59,7 +59,7 @@ func (h *ReactHandler) ReactPost(c *gin.Context) {
 		return
 	}
 
-	err = h.srv.ReactPostServ(ctx, postIDint, userIDInt, inp.emoji)
+	err = h.srv.ReactPostServ(ctx, postIDint, userIDInt, inp.Emoji)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
