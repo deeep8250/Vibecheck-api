@@ -52,12 +52,13 @@ func Routes() {
 	v1.GET("/feed", middleware.Middleware(), feedHandler.GetFeed)
 
 	//react
-	reactRepo := react.NewReactRepo()
-	reactService := react.NewReactionService(reactRepo)
+	reactRepo := react.NewReactRepository()
+	reactService := react.NewReactService(reactRepo)
 	reactHandler := react.NewReactHandler(reactService)
 
-	v1.POST("/react", middleware.Middleware(), reactHandler.ReactPostHandler)
-	v1.GET("/reactions/:postID", middleware.Middleware(), reactHandler.GetReactionsHandler)
+	v1.POST("/react", middleware.Middleware(), reactHandler.ReactPost)
+	v1.GET("/reactions/:postID", middleware.Middleware(), reactHandler.GetReactionByPost)
+	v1.DELETE("/reaction/:id", middleware.Middleware(), reactHandler.DeleteReaction)
 
 	r.Run(":8080")
 
