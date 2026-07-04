@@ -110,7 +110,7 @@ func (h *ReactHandler) DeleteReaction(c *gin.Context) {
 		})
 		return
 	}
-
+	//
 	userIDInt, ok := userID.(int)
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{
