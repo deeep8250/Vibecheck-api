@@ -1,1 +1,1 @@
-alter table post drop column if exists reaction_count; 
+alter table posts drop column if exists reaction_count; 

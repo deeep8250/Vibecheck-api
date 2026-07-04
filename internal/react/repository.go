@@ -1,72 +1,74 @@
 package react
 
 import (
+	"context"
 	"errors"
 
 	"github.com/deeep8250/vibecheck-api/internal/config"
 	"github.com/deeep8250/vibecheck-api/internal/models"
 	"github.com/jmoiron/sqlx"
-	"golang.org/x/net/context"
 )
 
-type ReactRepo struct {
+type ReactRepository struct {
 	db *sqlx.DB
 }
 
-func NewReactRepo() *ReactRepo {
-	return &ReactRepo{
+func NewReactRepository() *ReactRepository {
+	return &ReactRepository{
 		db: config.PostgresDB,
 	}
 }
 
-func (r *ReactRepo) AddReaction(ctx context.Context, input Reaction) error {
-	query := `insert into reaction (post_id,reaction_giver_id) values ($1,$2)`
-	rowsAffected, err := r.db.ExecContext(ctx, query, input.PostID, input.Reaction)
+func (r *ReactRepository) ReactPost(ctx context.Context, postID, userID int, emoji string) error {
+
+	query := `insert into reactions(post_id,reaction_giver_id,emoji) values($1,$2,$3)`
+	_, err := r.db.ExecContext(ctx, query, postID, userID, emoji)
 	if err != nil {
 		return err
 	}
-	RowsAff, _ := rowsAffected.RowsAffected()
-	if RowsAff == 0 {
-		return errors.New("unable to add your reaction")
-	}
+
 	return nil
+
 }
+func (r *ReactRepository) GetReactionsByPostID(ctx context.Context, postID int) ([]ReactionDetail, error) {
+	query := `SELECT u.username,r.id,r.emoji,r.created_at from users as u
+	join reactions as r on r.reaction_giver_id=u.id where r.post_id=$1
+   
+	`
 
-func (r *ReactRepo) GetReactions(ctx context.Context, postID int) ([]models.ReactionDetail, error) {
-	query := `select u.name ,p.content,p.mood_tag,p.emoji,p.post_date,p.created_at,r.reaction_emoji  from users as u 
-	          join posts as p  on p.user_id=u.id
-			  join reactions as r on r.post_id=p.id
-			  where r.post_id=$1 
-			  GROUP BY 
-			u.name,
-			p.content,
-			p.mood_tag,
-			p.emoji,
-			p.post_date,
-			p.created_at,
-			r.reaction_emoji
-			  `
+	var PostsWithReact []ReactionDetail
 
-	var Reactions []models.ReactionDetail
-	err := r.db.SelectContext(ctx, &Reactions, query, postID)
+	err := r.db.SelectContext(ctx, &PostsWithReact, query, postID)
 	if err != nil {
 		return nil, err
 	}
-	return Reactions, nil
+	return PostsWithReact, nil
+
 }
-func (r *ReactRepo) CheckReact(ctx context.Context, postId, userID int) (int, error) {
 
-	query := `select count(*) from reactions where post_id=$1 and  reaction_giver_id=$2 `
+func (r *ReactRepository) GetPost(ctx context.Context, postID int) (*models.Post, error) {
+	query := `select * from posts where id=$1`
 
-	var cnt int
-	err := r.db.GetContext(ctx, &cnt, query, postId, userID)
-
+	var post models.Post
+	err := r.db.GetContext(ctx, &post, query, postID)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	if cnt <= 0 {
-		return 0, errors.New("no reaction found in this post")
-	}
-	return cnt, nil
+	return &post, nil
+}
 
+func (r *ReactRepository) DeleteReact(ctx context.Context, postId, userId int) error {
+	query := `delete from reactions where reaction_giver_id=$1 and post_id=$2`
+	result, err := r.db.ExecContext(ctx, query, userId, postId)
+	if err != nil {
+		return err
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsAffected == 0 {
+		return errors.New("reaction not found or unauthorized")
+	}
+	return nil
 }

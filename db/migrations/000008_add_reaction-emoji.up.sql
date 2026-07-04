@@ -1,1 +1,1 @@
-alter table reaction add column reaction_emoji varchar default '👍';
+alter table reactions add column reaction_emoji varchar default '👍';

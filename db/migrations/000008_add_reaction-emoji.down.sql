@@ -1,1 +1,1 @@
-alter table reaction drop column if  exists reaction_emoji;
+alter table reactions drop column if  exists reaction_emoji;

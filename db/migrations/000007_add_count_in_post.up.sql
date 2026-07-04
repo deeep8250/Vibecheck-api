@@ -1,1 +1,1 @@
-alter  table post add column reaction_count int default 0; 
+alter  table posts add column reaction_count int default 0; 

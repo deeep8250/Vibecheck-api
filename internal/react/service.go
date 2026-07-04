@@ -2,22 +2,56 @@ package react
 
 import (
 	"context"
-
-	"github.com/deeep8250/vibecheck-api/internal/models"
 )
 
-type ReactionService struct {
-	repo ReactRepositoryInterface
+type ReactService struct {
+	repo ReactRepoInterface
 }
 
-func NewReactionService(R ReactRepositoryInterface) *ReactionService {
-	return &ReactionService{
-
-		repo: R,
+func NewReactService(r ReactRepoInterface) *ReactService {
+	return &ReactService{
+		repo: r,
 	}
 }
 
-func (s *ReactionService) ReactPost(ctx context.Context, r Reaction) error {
-	err := s.repo.ReactPost()
+func (r *ReactService) ReactPostServ(ctx context.Context, postID, userID int, emoji string) error {
+	err := r.repo.ReactPost(ctx, postID, userID, emoji)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-func GetReactions(ctx context.Context, postID int) ([]models.ReactionDetail, error) {}
+func (r *ReactService) GetReactionsByPostID(ctx context.Context, postID int) (*PostWithReactions, error) {
+	reaction, err := r.repo.GetReactionsByPostID(ctx, postID)
+	if err != nil {
+		return nil, err
+	}
+
+	post, err := r.repo.GetPost(ctx, postID)
+	if err != nil {
+		return nil, err
+	}
+
+	var postReactions PostWithReactions
+	for _, r := range reaction {
+		postReactions.Reactions = append(postReactions.Reactions, r)
+	}
+	postReactions.OwnerID = post.UserID
+	postReactions.PostID = post.ID
+	postReactions.Content = post.Content
+	postReactions.MoodTag = post.MoodTag
+	postReactions.Emoji = post.Emoji
+	postReactions.PostDate = post.PostDate
+	postReactions.CreatedAt = post.CreatedAt
+
+	return &postReactions, nil
+
+}
+
+func (r *ReactService) RemoveReact(ctx context.Context, postID, userID int) error {
+	err := r.repo.DeleteReact(ctx, userID, postID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

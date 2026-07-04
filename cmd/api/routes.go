@@ -6,6 +6,7 @@ import (
 	"github.com/deeep8250/vibecheck-api/internal/follow"
 	"github.com/deeep8250/vibecheck-api/internal/middleware"
 	"github.com/deeep8250/vibecheck-api/internal/post"
+	"github.com/deeep8250/vibecheck-api/internal/react"
 	"github.com/gin-gonic/gin"
 )
 
@@ -49,6 +50,14 @@ func Routes() {
 	feedHandler := feed.NewFeedHandler(feedService)
 
 	v1.GET("/feed", middleware.Middleware(), feedHandler.GetFeed)
+
+	//react
+	reactRepo := react.NewReactRepo()
+	reactService := react.NewReactionService(reactRepo)
+	reactHandler := react.NewReactHandler(reactService)
+
+	v1.POST("/react", middleware.Middleware(), reactHandler.ReactPostHandler)
+	v1.GET("/reactions/:postID", middleware.Middleware(), reactHandler.GetReactionsHandler)
 
 	r.Run(":8080")
 
