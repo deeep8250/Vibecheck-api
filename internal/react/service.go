@@ -49,7 +49,7 @@ func (r *ReactService) GetReactionsByPostID(ctx context.Context, postID int) (*P
 }
 
 func (r *ReactService) RemoveReact(ctx context.Context, postID, userID int) error {
-	err := r.repo.DeleteReact(ctx, userID, postID)
+	err := r.repo.DeleteReact(ctx, postID, userID)
 	if err != nil {
 		return err
 	}

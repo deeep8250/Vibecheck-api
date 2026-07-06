@@ -21,7 +21,7 @@ func NewReactRepository() *ReactRepository {
 
 func (r *ReactRepository) ReactPost(ctx context.Context, postID, userID int, emoji string) error {
 
-	query := `insert into reactions(post_id,reaction_giver_id,emoji) values($1,$2,$3)`
+	query := `insert into reactions(post_id,reaction_giver_id,reaction_emoji) values($1,$2,$3)`
 	_, err := r.db.ExecContext(ctx, query, postID, userID, emoji)
 	if err != nil {
 		return err
@@ -31,7 +31,7 @@ func (r *ReactRepository) ReactPost(ctx context.Context, postID, userID int, emo
 
 }
 func (r *ReactRepository) GetReactionsByPostID(ctx context.Context, postID int) ([]ReactionDetail, error) {
-	query := `SELECT u.username,r.id,r.emoji,r.created_at from users as u
+	query := `SELECT u.username,r.id,r.reaction_emoji,r.created_at from users as u
 	join reactions as r on r.reaction_giver_id=u.id where r.post_id=$1
    
 	`

@@ -1,0 +1,1 @@
+alter table posts add column if exists reaction_count  int default 0;

@@ -7,7 +7,7 @@ import (
 type ReactionDetail struct {
 	ReactionID      int       `db:"id" json:"id"`
 	ReactorUsername string    `db:"username" json:"username"`
-	Emoji           string    `db:"emoji" json:"emoji"`
+	Emoji           string    `db:"reaction_emoji" json:"emoji"`
 	CreatedAt       time.Time `db:"created_at" json:"created_at"`
 }
 type PostWithReactions struct {

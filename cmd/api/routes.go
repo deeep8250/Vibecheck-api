@@ -56,9 +56,9 @@ func Routes() {
 	reactService := react.NewReactService(reactRepo)
 	reactHandler := react.NewReactHandler(reactService)
 
-	v1.POST("/react", middleware.Middleware(), reactHandler.ReactPost)
-	v1.GET("/reactions/:postID", middleware.Middleware(), reactHandler.GetReactionByPost)
-	v1.DELETE("/reaction/:id", middleware.Middleware(), reactHandler.DeleteReaction)
+	v1.POST("/react/:id", middleware.Middleware(), reactHandler.ReactPost)
+	v1.GET("/reactions/:id", reactHandler.GetReactionByPost)
+	v1.DELETE("/reaction/:postid", middleware.Middleware(), reactHandler.DeleteReaction)
 
 	r.Run(":8080")
 

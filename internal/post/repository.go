@@ -46,7 +46,7 @@ func (r *PostRepository) GetPost(ctx context.Context, postID int) (*models.Post,
 func (r *PostRepository) GetAllPost(ctx context.Context, userID int) ([]models.Post, error) {
 	var Posts []models.Post
 
-	query := `select * from posts where user_id=$1`
+	query := `select p.*,count(r.id) as reaction_count from posts as p left join reactions as r on p.id=r.post_id where p.user_id=$1 group by p.id ORDER BY p.created_at DESC;`
 	err := r.Db.SelectContext(ctx, &Posts, query, userID)
 	if err != nil {
 		return nil, err

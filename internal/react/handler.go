@@ -119,7 +119,7 @@ func (h *ReactHandler) DeleteReaction(c *gin.Context) {
 		return
 	}
 
-	postID := c.Param("id")
+	postID := c.Param("postid")
 	postIDint, err := strconv.Atoi(postID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

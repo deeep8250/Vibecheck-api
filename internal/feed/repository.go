@@ -20,8 +20,13 @@ func NewFeedRepo() *FeedRepo {
 func (r *FeedRepo) GetFeed(c context.Context, userID, limit, offset int) ([]models.Post, error) {
 	var Feed []models.Post
 
-	query := `select p.* from posts as p
-	join follows as f on f.followed_user_id=p.user_id  where f.follower_id=$1 order by p.created_at desc limit $2 offset $3`
+	query := `select p.*,count(r.id) as reaction_count from posts as p
+	join follows as f on f.followed_user_id=p.user_id
+	left join reactions as r on p.id=r.post_id
+	where f.follower_id=$1 
+	group by p.id
+	order by p.created_at desc
+	limit $2 offset $3`
 
 	err := r.db.SelectContext(c, &Feed, query, userID, limit, offset)
 	if err != nil {
