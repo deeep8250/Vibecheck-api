@@ -2,7 +2,6 @@ package post
 
 import (
 	"context"
-	"errors"
 
 	"github.com/deeep8250/vibecheck-api/internal/config"
 	"github.com/deeep8250/vibecheck-api/internal/models"
@@ -74,21 +73,33 @@ func (r *PostRepository) UpdatePost(ctx context.Context, userID, postID int, use
 }
 func (r *PostRepository) DeletePost(ctx context.Context, userID, postiD int) error {
 
-	query := `delete from posts where id=$1 and user_id=$2`
-	result, err := r.Db.ExecContext(ctx, query, postiD, userID)
+	// query := `delete from posts where id=$1 and user_id=$2`
+	// result, err := r.Db.ExecContext(ctx, query, postiD, userID)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// rowsAffected, err := result.RowsAffected()
+	// if err != nil {
+	// 	return err
+	// }
+	// if rowsAffected == 0 {
+
+	// 	return errors.New("post not found or unauthorized")
+	// }
+
+	// return nil
+
+	tx, err := r.Db.BeginTxx(ctx, nil)
 	if err != nil {
 		return err
 	}
 
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return err
-	}
-	if rowsAffected == 0 {
+	defer tx.Rollback()
 
-		return errors.New("post not found or unauthorized")
-	}
+	_, err = tx.ExecContext(ctx, "Delete from reactions where post_id=$1", postiD)
+	_, err = tx.ExecContext(ctx, "Delete from posts where id=$1", postiD)
 
-	return nil
+	return tx.Commit()
 
 }
